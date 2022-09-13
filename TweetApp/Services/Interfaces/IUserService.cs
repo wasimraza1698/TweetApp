@@ -10,7 +10,9 @@ namespace TweetApp.Services.Interfaces
     {
         public Task<string> RegisterUser(UserRequest user);
 
-        public Task<string> LoginUser(Credentials credentials);
+        public Task<(string, string)> LoginUser(Credentials credentials);
+
+        public Task<bool> ResetPassword(ResetPasswordRequest resetPasswordRequest);
 
         public Task<List<UserResponse>> SearchUserByUserName(string userName);
 

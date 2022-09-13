@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TweetApp.DBSettings;
 using TweetApp.Models.DataModels;
@@ -36,13 +37,17 @@ namespace TweetApp.Repositories
         public async Task<List<Tweet>> GetAllTweets()
         {
             var tweets = await _tweetsCollection.FindAsync(t => true);
-            return await tweets.ToListAsync();
+            var tweetsList = await tweets.ToListAsync();
+            tweetsList = tweetsList.OrderByDescending(t => t.CreatedOn).ToList();
+            return tweetsList;
         }
 
         public async Task<List<Tweet>> GetAllTweetsOfUser(string username)
         {
             var tweets = await _tweetsCollection.FindAsync(t => t.CreatedBy.Equals(username));
-            return await tweets.ToListAsync();
+            var tweetsList = await tweets.ToListAsync();
+            tweetsList = tweetsList.OrderByDescending(t => t.CreatedOn).ToList();
+            return tweetsList;
         }
 
         public async Task<Tweet> GetTweetById(string tweetid)

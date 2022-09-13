@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TweetApp.DBSettings;
 using TweetApp.Models.DataModels;
@@ -26,7 +27,9 @@ namespace TweetApp.Repositories
         public async Task<List<Reply>> GetRepliesOfTweet(string tweetid)
         {
             var replies = await _repliesCollection.FindAsync(r => r.TweetId.Equals(tweetid));
-            return await replies.ToListAsync();
+            var repliesList = await replies.ToListAsync();
+            repliesList = repliesList.OrderByDescending(t => t.CreatedOn).ToList();
+            return repliesList;
         }
     }
 }

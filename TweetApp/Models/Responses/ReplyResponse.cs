@@ -16,6 +16,8 @@ namespace TweetApp.Models.Responses
 
         public string RepliedBy { get; set; }
 
+        public UserResponse RepliedByUser { get; set; }
+
         public DateTime RepliedAt { get; set; }
     }
 }

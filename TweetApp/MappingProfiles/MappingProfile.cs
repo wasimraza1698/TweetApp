@@ -25,8 +25,7 @@ namespace TweetApp.MappingProfiles
 
             CreateMap<Tweet, TweetResponse>()
                 .ForMember(dest => dest.TweetedBy, opt => opt.MapFrom(src => src.CreatedBy))
-                .ForMember(dest => dest.TweetedAt, opt => opt.MapFrom(src => src.CreatedOn))
-                .ForMember(dest => dest.TweetLiked, opt => opt.MapFrom(src => src.TweetLikedBy.Contains(username)));
+                .ForMember(dest => dest.TweetedAt, opt => opt.MapFrom(src => src.CreatedOn));
 
             CreateMap<Reply, ReplyResponse>()
                 .ForMember(dest => dest.RepliedBy, opt => opt.MapFrom(src => src.CreatedBy))

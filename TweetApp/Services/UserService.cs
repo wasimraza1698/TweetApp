@@ -31,7 +31,7 @@ namespace TweetApp.Services
             _mapper = mapper;
         }
 
-        public async Task<string> LoginUser(Credentials credentials)
+        public async Task<(string, string)> LoginUser(Credentials credentials)
         {
             _logger.LogInformation(Constants.SearchingUserByUserName, credentials.UserName);
 
@@ -53,15 +53,15 @@ namespace TweetApp.Services
                 {
                     _logger.LogInformation(Constants.GeneratingJWT, credentials.UserName);
 
-                    return _authService.GenerateJWT(user.UserName);
+                    return (_authService.GenerateJWT(user.UserName), user.UserName);
                 }
 
                 _logger.LogInformation(Constants.IncorrectPassword, credentials.UserName);
-                return null;
+                return (null, null);
             }
 
             _logger.LogInformation(Constants.UserNotFoundByEmailId, credentials.UserName);
-            return null;
+            return (null, null);
         }
 
         public async Task<string> RegisterUser(UserRequest user)
@@ -84,6 +84,31 @@ namespace TweetApp.Services
 
             _logger.LogInformation(Constants.UserExists, user.UserName, user.EmailId);
             return null;
+        }
+
+        public async Task<bool> ResetPassword(ResetPasswordRequest resetPasswordRequest)
+        {
+            _logger.LogInformation(Constants.SearchingUserByEmailId, resetPasswordRequest.EmailId);
+
+            var user = await _userRepository.FindUserByEmail(resetPasswordRequest.EmailId);
+
+            if (user != null)
+            {
+                if (user.ContactNumber == resetPasswordRequest.ContactNumber)
+                {
+                    user.Password = resetPasswordRequest.NewPassword;
+                    await _userRepository.UpdateUser(user);
+
+                    _logger.LogInformation(Constants.UpdatedPassword);
+                    return true;
+                }
+
+                _logger.LogInformation(Constants.IncorrectNumber, resetPasswordRequest.ContactNumber);
+                return false;
+            }
+
+            _logger.LogInformation(Constants.UserNotFoundByEmailId, resetPasswordRequest.EmailId);
+            return false;
         }
 
         public async Task<List<UserResponse>> SearchUserByUserName(string userName)

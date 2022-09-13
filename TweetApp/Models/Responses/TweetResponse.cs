@@ -15,12 +15,14 @@ namespace TweetApp.Models.Responses
 
         public string TweetTag { get; set; }
 
-        public bool TweetLiked { get; set; }
-
         public string TweetedBy { get; set; }
+
+        public UserResponse TweetedByUser { get; set; }
 
         public DateTime TweetedAt { get; set; }
 
         public List<ReplyResponse> Replies { get; set; }
+
+        public int RepliesCount { get; set; }
     }
 }

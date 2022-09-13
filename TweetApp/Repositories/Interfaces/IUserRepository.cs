@@ -8,6 +8,8 @@ namespace TweetApp.Repositories.Interfaces
     {
         public Task AddUser(User user);
 
+        public Task UpdateUser(User user);
+
         public Task<User> FindUserByUserName(string userName);
 
         public Task<User> FindUserByEmail(string email);
