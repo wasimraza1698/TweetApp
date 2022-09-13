@@ -6,6 +6,7 @@
         internal const string BaseURL = "api/v1.0/tweets";
         internal const string RegisterUser = "register";
         internal const string Login = "login";
+        internal const string ResetPassword = "reset-password";
         internal const string SearchUser = "search/{username}";
         internal const string AllUsers = "users/all";
         internal const string AddTweet = "{username}/add";
@@ -22,6 +23,7 @@
         internal const string ExistingUser = "User existing with given emailid or username. Please login or give different username and emailid to register.";
         internal const string InvalidCredentials = "Invalid username or password.";
         internal const string LoginSuccess = "Logged in successfully.";
+        internal const string FailedUpdatingPassword = "Incorrect email or contact number. Failed updating password";
         internal const string TweetAdded = "Tweet posted.";
         internal const string FailedPostingTweet = "Could not post tweet.";
         internal const string ReplyAdded = "Reply added to tweet.";
@@ -37,6 +39,7 @@
         internal const string RegistrationError = "Error occurred while registering user: {0}. Message: {1}, StackTrace: {2}";
         internal const string SearchUserError = "Error occurred while searching for user: {0}. Message: {1}, StackTrace: {2}";
         internal const string LoginError = "Error occurred while logging in user: {0}. Message: {1}, StackTrace: {2}";
+        internal const string ResetPasswordError = "Error occurred while resetting password of user with email: {0}. Message: {1}, StackTrace: {2}";
         internal const string GetAllUsersError = "Error occurred while retrieving all the users. Message: {0}, StackTrace: {1}";
         internal const string AddingTweetError = "Error occurred while adding a tweet for user: {0}. Message: {1}, StackTrace: {2}";
         internal const string GetAllTweetsError = "Error occurred while getting all the tweets. Message: {0}, StackTrace: {1}";
@@ -55,6 +58,9 @@
         internal const string UserFound = "User: {0} found. validating credentials";
         internal const string GeneratingJWT = "Valid user: {0}. Generating JWT.";
         internal const string IncorrectPassword = "Password incorrect for username/email: {0}";
+
+        internal const string UpdatedPassword = "Password updated successfully";
+        internal const string IncorrectNumber = "Incorrect contect number provided";
 
         internal const string NotAnExistingUser = "Not an existing user. Creating new user: {0}";
         internal const string UserExists = "User already exists with username: {0} or emailid: {1}";

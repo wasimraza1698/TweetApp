@@ -4,6 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>bin\TweetApp.xml</DocumentationFile>
+    <UserSecretsId>0c3c6178-ed92-448b-86f7-4b5460c52cf7</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -18,6 +20,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.17" />
+    <PackageReference Include="mongocsharpdriver" Version="2.16.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.16.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.19.0" />

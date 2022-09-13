@@ -73,11 +73,11 @@ namespace TweetApp.Controllers
                     Password = password
                 };
 
-                var token = await _userService.LoginUser(credentials);
+                var (token, userName) = await _userService.LoginUser(credentials);
 
-                if (!string.IsNullOrEmpty(token))
+                if (!string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(userName))
                 {
-                    return Ok(new { Message = Constants.LoginSuccess, JWToken = token });
+                    return Ok(new { Message = Constants.LoginSuccess, JWToken = token, UserName = userName });
                 }
 
                 return BadRequest(Constants.InvalidCredentials);
@@ -85,6 +85,32 @@ namespace TweetApp.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(Constants.LoginError, username, ex.Message, ex.StackTrace);
+                return Problem();
+            }
+        }
+
+        /// <summary>
+        /// API to reset password.
+        /// </summary>
+        /// <param name="resetPasswordRequest"></param>
+        /// <returns></returns>
+        [HttpPut(Constants.ResetPassword)]
+        public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPasswordRequest)
+        {
+            try
+            {
+                var passwordUpdated = await _userService.ResetPassword(resetPasswordRequest);
+
+                if (passwordUpdated)
+                {
+                    return Ok(Constants.UpdatedPassword);
+                }
+
+                return BadRequest(Constants.FailedUpdatingPassword);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(Constants.ResetPasswordError, resetPasswordRequest.EmailId, ex.Message, ex.StackTrace);
                 return Problem();
             }
         }

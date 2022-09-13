@@ -25,6 +25,11 @@ namespace TweetApp.Repositories
             await _usersCollection.InsertOneAsync(user);
         }
 
+        public async Task UpdateUser(User user)
+        {
+            await _usersCollection.ReplaceOneAsync<User>(u => u.UserId == user.UserId, user);
+        }
+
         public async Task<User> FindUserByUserName(string userName)
         {
 

@@ -14,19 +14,28 @@ namespace TweetApp.Models.Validations
 
             RuleFor(x => x.Password)
                 .NotNull()
-                .NotEmpty();
+                .NotEmpty()
+                .Custom((x, context) =>
+                {
+                    if (!string.IsNullOrEmpty(x))
+                    {
+                        Regex regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,14}$", RegexOptions.CultureInvariant | RegexOptions.Singleline);
+
+                        if (!regex.IsMatch(x))
+                        {
+                            context.AddFailure($"Password should be greater than 8 characters and less than 14 characters and should have at least an uppercase letter, a lowercase letter, a special character and a number.");
+                        }
+                    }
+                });
 
             RuleFor(x => x.FirstName)
                 .NotNull()
                 .NotEmpty();
 
-            RuleFor(x => x.LastName)
-                .NotNull()
-                .NotEmpty();
-
             RuleFor(x => x.ContactNumber)
                 .NotNull()
-                .NotEmpty();
+                .NotEmpty()
+                .Length(10);
 
             RuleFor(x => x.EmailId)
                 .NotNull()

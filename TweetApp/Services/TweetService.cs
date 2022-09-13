@@ -83,8 +83,13 @@ namespace TweetApp.Services
 
                         var updatedTweet = _mapper.Map<Tweet, TweetResponse>(existingTweet);
 
+                        var users = await _userService.SearchUserByUserName(username);
+                        var user = users.Find(u => u.UserName == username);
+                        updatedTweet.TweetedByUser = user;
+
                         _logger.LogInformation(Constants.MapppingRepliesToTweet, tweetid);
                         updatedTweet.Replies = await GetRepliesByTweetId(tweetid);
+                        updatedTweet.RepliesCount = updatedTweet.Replies.Count;
                         _logger.LogInformation(Constants.MappedRepliesToTweet, tweetid);
 
                         return updatedTweet;
@@ -178,6 +183,10 @@ namespace TweetApp.Services
 
                     var tweetResponse = _mapper.Map<Tweet, TweetResponse>(tweet);
 
+                    var users = await _userService.SearchUserByUserName(username);
+                    var user = users.Find(u => u.UserName == username);
+                    tweetResponse.TweetedByUser = user;
+
                     _logger.LogInformation(Constants.MapppingRepliesToTweet, tweetid);
                     tweetResponse.Replies = await GetRepliesByTweetId(tweetid);
                     _logger.LogInformation(Constants.MappedRepliesToTweet, tweetid);
@@ -205,7 +214,11 @@ namespace TweetApp.Services
 
             for (int i = 0; i < tweetsResponse.Count; i++)
             {
+                var users = await _userService.SearchUserByUserName(tweetsResponse[i].TweetedBy);
+                var user = users.Find(u => u.UserName == tweetsResponse[i].TweetedBy);
+                tweetsResponse[i].TweetedByUser = user;
                 tweetsResponse[i].Replies = await GetRepliesByTweetId(tweetsResponse[i].TweetId);
+                tweetsResponse[i].RepliesCount = tweetsResponse[i].Replies.Count;
             }
 
             _logger.LogInformation(Constants.RepliesMappedForAllTweets);
@@ -217,9 +230,9 @@ namespace TweetApp.Services
         {
             _logger.LogInformation(Constants.SearchingUserByUserName, username);
             var users = await _userService.SearchUserByUserName(username);
-            var isValidUsername = users.Exists(u => u.UserName == username);
+            var user = users.Find(u => u.UserName == username);
 
-            if (isValidUsername)
+            if (user != null)
             {
                 _logger.LogInformation(Constants.RetrievingAllTweetsOfUser, username);
 
@@ -237,7 +250,9 @@ namespace TweetApp.Services
 
                 for (int i = 0; i < tweetsResponse.Count; i++)
                 {
+                    tweetsResponse[i].TweetedByUser = user;
                     tweetsResponse[i].Replies = await GetRepliesByTweetId(tweetsResponse[i].TweetId);
+                    tweetsResponse[i].RepliesCount = tweetsResponse[i].Replies.Count;
                 }
 
                 _logger.LogInformation(Constants.RepliesMappedForAllTweetsOfUser, username);
@@ -260,6 +275,11 @@ namespace TweetApp.Services
 
                 var response = _mapper.Map<Tweet, TweetResponse>(tweet);
                 response.Replies = await GetRepliesByTweetId(tweetid);
+                response.RepliesCount = response.Replies.Count;
+
+                var users = await _userService.SearchUserByUserName(response.TweetedBy);
+                var user = users.Find(u => u.UserName == response.TweetedBy);
+                response.TweetedByUser = user;
 
                 return response;
             }
@@ -273,9 +293,17 @@ namespace TweetApp.Services
             _logger.LogInformation(Constants.GettingRepliesByTweetId, tweetid);
 
             var replies = await _replyRepository.GetRepliesOfTweet(tweetid);
+            var repliesResponse = _mapper.Map<List<Reply>, List<ReplyResponse>>(replies);
+            
+            for(int i = 0; i < repliesResponse.Count; i++)
+            {
+                var users = await _userService.SearchUserByUserName(repliesResponse[i].RepliedBy);
+                var user = users.Find(u => u.UserName == repliesResponse[i].RepliedBy);
+                repliesResponse[i].RepliedByUser = user;
+            }
 
             _logger.LogInformation(Constants.FetchedRepliesByTweetId, tweetid);
-            return _mapper.Map<List<Reply>, List<ReplyResponse>>(replies);
+            return repliesResponse;
         }
     }
 }
