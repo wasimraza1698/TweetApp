@@ -56,15 +56,12 @@ namespace TweetApp
                 };
             });
 
-            services.AddCors(options =>
+            services.AddCors(c =>
             {
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        builder.WithOrigins("https://localhost:44351", "http://localhost:4200")
-                                            .AllowAnyHeader()
-                                            .AllowAnyMethod();
-                    });
+                c.AddPolicy("AllowOrigin", options =>
+               options.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                     .AllowAnyHeader());
             });
 
             // Add DBSettings to services
@@ -104,13 +101,7 @@ namespace TweetApp
 
             app.UseRouting();
 
-            app.UseCors(builder =>
-            {
-                builder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-            });
+            app.UseCors("AllowOrigin");
 
             app.UseAuthorization();
 
